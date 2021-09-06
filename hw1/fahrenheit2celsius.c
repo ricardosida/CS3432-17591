@@ -21,7 +21,7 @@ int main() {
 	  }
 }
 float convert (float f){
-	/* using the formula for conversion*/
+	/* using the formula for conversion*/ 
           return 5 * (f-32) / 9;
           
 }
