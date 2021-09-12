@@ -14,5 +14,5 @@ int main()
 char** tokenize(char* str) {
     char* new_string = (char*) malloc(str_size * sizeof(str));
     printf("%s", new_string);
-    return 1;
+    return 0;
 }
