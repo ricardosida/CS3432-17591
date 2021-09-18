@@ -10,13 +10,13 @@ bool non_delim_character(char c);
 bool delim_character(char c);
 char *end_word(char* str);
 char *copy_str(char *inStr, short len);
+void print_all_tokens(char** tokens);
 
 int main()
 {
     /*Ask fro input*/
     char str[MAX_LIMIT];
     fgets(str, MAX_LIMIT, stdin);
-
     /*create a pointer for the input*/
     
     char* pointer = str;
@@ -27,9 +27,8 @@ int main()
 char** tokenize(char* str) {
     /*First we get the number of tokens*/
     int num_tokens = count_tokens(str);
-    /* once we have # tokens, we call malloc*/
-    char* new_string = (char*) malloc(num_tokens * sizeof(char));
-    char*temp_new_string =new_string;
+    /*I create a new pointer of pointers with the number of tokens avaiable as length*/
+    char ** tokens = (char**) malloc(num_tokens * sizeof(char));
     char *initial_word = str;
     for (int i = 0; i < num_tokens; i++) {
         /*First we get the initial and last letter of each word*/
@@ -41,17 +40,11 @@ char** tokenize(char* str) {
         int difference = (last_word - initial_word);
         printf("dif %d\n",difference);
         printf("str %c\n",*str);
-        temp_new_string = copy_str(initial_word, difference);
-        printf("string %s\n",temp_new_string);
-        /*At the end we add the returned pointer to the pointer of pointers*/
-        temp_new_string++;
+        *(tokens + i) = copy_str(initial_word, difference);
         initial_word += difference;
     }
-    
-   
-    
-    return 0;
-    
+    print_all_tokens(tokens);
+    return tokens;
 
 }
 
@@ -125,17 +118,24 @@ int count_tokens(char* str){
      tokens[3] = 0
 */
 char *copy_str(char *inStr, short len){
-    char word[len];
+    char* new_string = (char*) malloc(len * sizeof(char));
     for (int i = 0; i < len; i++) {
-        word[i] = *inStr;
+        *(new_string + i) = *inStr;
         inStr++;
     }
 
-    char *p = word;
-    return p;
+    return new_string;
 
 }
 
 void print_all_tokens(char** tokens){
+
+ printf("%s\n",*tokens);
+ tokens++;
+ printf("%s\n",*tokens);
+ 
+
+
+
 
 }
