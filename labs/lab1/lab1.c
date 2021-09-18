@@ -27,13 +27,26 @@ int main()
 char** tokenize(char* str) {
     /*First we get the number of tokens*/
     int num_tokens = count_tokens(str);
-
     /* once we have # tokens, we call malloc*/
     char* new_string = (char*) malloc(num_tokens * sizeof(char));
-    char *initial_word = word_start(str);
-    char *last_word  = end_word(initial_word);
-    last_word++;
-    printf("%c%c\n",*initial_word,*last_word);
+    char*temp_new_string =new_string;
+    char *initial_word = str;
+    for (int i = 0; i < num_tokens; i++) {
+        /*First we get the initial and last letter of each word*/
+        char *initial_word = word_start(initial_word);
+        char *last_word  = end_word(initial_word);
+        printf("%c%c\n",*initial_word,*last_word);
+        
+        /*Now we subtract the addreses of both pointers*/
+        int difference = (last_word - initial_word);
+        printf("dif %d\n",difference);
+        printf("str %c\n",*str);
+        temp_new_string = copy_str(initial_word, difference);
+        printf("string %s\n",temp_new_string);
+        /*At the end we add the returned pointer to the pointer of pointers*/
+        temp_new_string++;
+        initial_word += difference;
+    }
     
    
     
@@ -81,10 +94,6 @@ char *word_start(char* str){
 terminated string*/
 char *end_word(char* str){
     char *pointer = str; 
-    /*base case, in case pointer is at the end of array*/
-    if (*pointer == '\0'){
-        return pointer-1;
-    }
     if (delim_character(*pointer) == true){
         char *p = pointer;
         return p;
@@ -96,8 +105,7 @@ char *end_word(char* str){
 int count_tokens(char* str){
     char * t; // copy the pointer to not change the original
     int size = 0;
-
-    for (t = str; *t != '\0'; t++) {
+    for (t = word_start(str) ;*t != '\0'; t++) {
         if (delim_character(*t) == true){
             size++;
         }
@@ -117,11 +125,10 @@ int count_tokens(char* str){
      tokens[3] = 0
 */
 char *copy_str(char *inStr, short len){
-    char *pointer = inStr;
     char word[len];
     for (int i = 0; i < len; i++) {
-        word[i] = *pointer;
-        pointer++;
+        word[i] = *inStr;
+        inStr++;
     }
 
     char *p = word;
