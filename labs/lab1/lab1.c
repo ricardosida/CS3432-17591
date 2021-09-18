@@ -9,6 +9,7 @@ char *word_start(char* str);
 bool non_delim_character(char c);
 bool delim_character(char c);
 char *end_word(char* str);
+char *copy_str(char *inStr, short len);
 
 int main()
 {
@@ -17,31 +18,28 @@ int main()
     fgets(str, MAX_LIMIT, stdin);
 
     /*create a pointer for the input*/
+    
     char* pointer = str;
-
     tokenize(pointer);
 
 }
 
 char** tokenize(char* str) {
-
-
     /*First we get the number of tokens*/
     int num_tokens = count_tokens(str);
 
     /* once we have # tokens, we call malloc*/
     char* new_string = (char*) malloc(num_tokens * sizeof(char));
-
-    /*let's start filling the pointer of pointers*/
     char *initial_word = word_start(str);
-    char *last_word = end_word(str);
-    int difference = (last_word - initial_word);
-
-
-
-
-
+    char *last_word  = end_word(initial_word);
+    last_word++;
+    printf("%c%c\n",*initial_word,*last_word);
+    
+   
+    
     return 0;
+    
+
 }
 
 
@@ -60,7 +58,7 @@ bool delim_character(char c){
    character (not tab or space).
    Zero terminators are not printable (therefore false) */
 bool non_delim_character(char c){
-    if (c != ' '|| c != '\t'){
+    if (c != ' '|| c == '\t'){
         return true;
     }
     return false;
@@ -69,30 +67,30 @@ bool non_delim_character(char c){
 /* Returns a pointer to the first character of the next
    space-separated word*/
 char *word_start(char* str){
-    char *pointer = str;
-    /*base case, in case pointer is at the end of array*/
-    if (*pointer == '\0'){
-        return NULL;
-    }
+    char *pointer = str; 
     if (non_delim_character(*pointer) == true){
-        return pointer;
+        char *p = pointer;
+        return p;
     }
     return word_start(pointer +1);
+    
+
 }
 
 /* Returns a pointer to the first space character of the zero
 terminated string*/
 char *end_word(char* str){
-    char *pointer = str;
+    char *pointer = str; 
     /*base case, in case pointer is at the end of array*/
     if (*pointer == '\0'){
-        return pointer-2;
+        return pointer-1;
     }
     if (delim_character(*pointer) == true){
-        return pointer -1;
+        char *p = pointer;
+        return p;
     }
     return end_word(pointer +1);
-    
+
 }
 // counts the number of words or tokens
 int count_tokens(char* str){
@@ -119,11 +117,15 @@ int count_tokens(char* str){
      tokens[3] = 0
 */
 char *copy_str(char *inStr, short len){
-    
-    char *temp_token;
-    return 0;
-    
+    char *pointer = inStr;
+    char word[len];
+    for (int i = 0; i < len; i++) {
+        word[i] = *pointer;
+        pointer++;
+    }
 
+    char *p = word;
+    return p;
 
 }
 
