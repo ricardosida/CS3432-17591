@@ -33,14 +33,13 @@ char** tokenize(char* str) {
     char* new_string = (char*) malloc(num_tokens * sizeof(char));
 
     /*let's start filling the pointer of pointers*/
-    for (int i; i < num_tokens; i++){
-        char *initial_word = word_start(str);
-        char *last_word = end_word(str);
-        printf("%d\n",initial_word);
-        printf("%d\n",last_word);
-        
+    char *initial_word = word_start(str);
+    char *last_word = end_word(str);
+    int difference = (last_word - initial_word);
 
-    }
+
+
+
 
     return 0;
 }
@@ -61,7 +60,7 @@ bool delim_character(char c){
    character (not tab or space).
    Zero terminators are not printable (therefore false) */
 bool non_delim_character(char c){
-    if (c != ' '|| c == '\t'){
+    if (c != ' '|| c != '\t'){
         return true;
     }
     return false;
@@ -71,10 +70,12 @@ bool non_delim_character(char c){
    space-separated word*/
 char *word_start(char* str){
     char *pointer = str;
-
+    /*base case, in case pointer is at the end of array*/
+    if (*pointer == '\0'){
+        return NULL;
+    }
     if (non_delim_character(*pointer) == true){
-        char *p = pointer;
-        return p;
+        return pointer;
     }
     return word_start(pointer +1);
 }
@@ -83,10 +84,12 @@ char *word_start(char* str){
 terminated string*/
 char *end_word(char* str){
     char *pointer = str;
-    
+    /*base case, in case pointer is at the end of array*/
+    if (*pointer == '\0'){
+        return pointer-2;
+    }
     if (delim_character(*pointer) == true){
-        char *p = pointer;
-        return p;
+        return pointer -1;
     }
     return end_word(pointer +1);
     
@@ -118,6 +121,7 @@ int count_tokens(char* str){
 char *copy_str(char *inStr, short len){
     
     char *temp_token;
+    return 0;
     
 
 
