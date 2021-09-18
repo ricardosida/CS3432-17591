@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
-#define MAX_LIMIT 20
+#define MAX_LIMIT 1000
 
 int count_tokens(char* str);
 char** tokenize(char* str);
@@ -28,25 +28,19 @@ char** tokenize(char* str) {
     /*First we get the number of tokens*/
     int num_tokens = count_tokens(str);
     /*I create a new pointer of pointers with the number of tokens avaiable as length*/
-    char ** tokens = (char**) malloc((num_tokens ) * sizeof(char));
+    char ** tokens = (char**) malloc((num_tokens) *10 *sizeof(char));
     char *initial_word = str;
     for (int i = 0; i < num_tokens; i++) {
         /*First we get the initial and last letter of each word*/
         char *initial_word = word_start(initial_word);
         char *last_word  = end_word(initial_word);
-        printf("Initial and space %c%c\n",*initial_word,*last_word);
-        
         /*Now we subtract the addreses of both pointers*/
         int difference = (last_word - initial_word);
-        printf("dif %d\n",difference);
-        char * temp = copy_str(initial_word, difference);
-        *(tokens+i)  = temp;
-        printf("token %s\n",*(tokens+i));
+        tokens[i]  = copy_str(initial_word, difference);
         initial_word += difference;
     }
-    /*Add a 0 at the end to avoid errors*/
-    
-    printf("token %s\n",*tokens);
+
+    //printf("tokens[] = %s\n",tokens);
     print_all_tokens(tokens);
  
     return tokens;
@@ -125,7 +119,7 @@ int count_tokens(char* str){
 char *copy_str(char *inStr, short len){
     char* new_string = (char*) malloc(len * sizeof(char));
     for (int i = 0; i < len; i++) {
-        *(new_string + i) = *inStr;
+        new_string[i] = *inStr;
         inStr++;
     }
 
@@ -136,8 +130,7 @@ char *copy_str(char *inStr, short len){
 void print_all_tokens(char** tokens){
     int i = 0;
 
-    for (char **p = tokens; *p; p++)
-    {
+    for (char **p = tokens; *p; p++){
         printf("tokens[%d] = %s\n",i,*p);
         i++;
     }
