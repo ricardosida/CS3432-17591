@@ -19,16 +19,12 @@ int main()
     /*create a pointer for the input*/
     char* pointer = str;
 
-    /*EXCEPTION: check if first char is a space*/
-    if (*pointer == ' '){
-        tokenize(pointer +1);
-    }else{
-        tokenize(pointer);
-    }
+    tokenize(pointer);
 
 }
 
 char** tokenize(char* str) {
+
 
     /*First we get the number of tokens*/
     int num_tokens = count_tokens(str);
@@ -36,12 +32,16 @@ char** tokenize(char* str) {
     /* once we have # tokens, we call malloc*/
     char* new_string = (char*) malloc(num_tokens * sizeof(char));
 
+    /*let's start filling the pointer of pointers*/
+    for (int i; i < num_tokens; i++){
+        char *initial_word = word_start(str);
+        char *last_word = end_word(str);
+        printf("%d\n",initial_word);
+        printf("%d\n",last_word);
+        
 
-    char *initial_word = word_start(str);
+    }
 
-    printf("%c\n",*initial_word);
-
-    
     return 0;
 }
 
@@ -70,17 +70,13 @@ bool non_delim_character(char c){
 /* Returns a pointer to the first character of the next
    space-separated word*/
 char *word_start(char* str){
-
     char *pointer = str;
-    
+
     if (non_delim_character(*pointer) == true){
         char *p = pointer;
         return p;
     }
-    word_start(pointer +1);
-    
-    return 0;
-
+    return word_start(pointer +1);
 }
 
 /* Returns a pointer to the first space character of the zero
@@ -92,9 +88,8 @@ char *end_word(char* str){
         char *p = pointer;
         return p;
     }
-    end_word(pointer +1);
+    return end_word(pointer +1);
     
-    return 0;
 }
 // counts the number of words or tokens
 int count_tokens(char* str){
@@ -121,7 +116,11 @@ int count_tokens(char* str){
      tokens[3] = 0
 */
 char *copy_str(char *inStr, short len){
-return 0;
+    
+    char *temp_token;
+    
+
+
 }
 
 void print_all_tokens(char** tokens){
