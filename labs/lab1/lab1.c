@@ -18,6 +18,7 @@ int main()
     char* str = (char*) malloc(MAX_LIMIT * sizeof(char));
     scanf("%99[^\n]", str);
     
+    /*I send the pointer to tokeenize*/
     tokenize(str);
 
 }
@@ -27,20 +28,23 @@ char** tokenize(char* str) {
     int num_tokens = count_tokens(str);
     /*I create a new pointer of pointers with the number of tokens avaiable as length*/
     char ** tokens = (char**) malloc(num_tokens * sizeof(char*));
+    /*Get the initial word and the initial end of word*/
     char *initial_word = word_start(str);
     char *last_word  = end_word(initial_word);
     for (int i = 0; i < num_tokens; i++) {
         /*Now we subtract the addreses of both pointers*/
         int difference = (last_word - initial_word);
+        /*send the length of the word and the first letter to copy method, and assign the pointer to the token variable*/
         tokens[i]  = copy_str(initial_word, difference);
         /*we get the initial and last letter of each word*/
         initial_word = word_start(last_word);
         last_word  = end_word(initial_word);
     }
 
-    //printf("tokens[] = %s\n",tokens);
+    /*Print all tokens*/
     print_all_tokens(tokens);
  
+    /*return the char***/
     return tokens;
 
 }
@@ -70,6 +74,7 @@ bool non_delim_character(char c){
 /* Returns a pointer to the first character of the next
    space-separated word*/
 char *word_start(char* str){
+    /*Call recursively until i get the start of the word*/
     char *pointer = str; 
     if (non_delim_character(*pointer) == true){
         char *p = pointer;
@@ -87,6 +92,7 @@ char *end_word(char* str){
     if (*str == '\0'){
         return str;
     }
+    /*Call recursively until i get the end of the word*/
     char *pointer = str; 
     if (delim_character(*pointer) == true){
         char *p = pointer;
@@ -100,6 +106,7 @@ int count_tokens(char* str){
     char * t; // copy the pointer to not change the original
     int size = 0;
     for (t = word_start(str) ;*t != '\0'; t++) {
+        /*Every time i hit a space that means it is a new word*/
         if (delim_character(*t) == true){
             size++;
         }
@@ -119,6 +126,7 @@ int count_tokens(char* str){
      tokens[3] = 0
 */
 char *copy_str(char *inStr, short len){
+    /*Create a new pointer and fill it with all the char of the given word*/
     char* new_string = (char*) malloc(len * sizeof(char));
     for (int i = 0; i < len; i++) {
         new_string[i] = *inStr;
@@ -130,6 +138,7 @@ char *copy_str(char *inStr, short len){
 }
 
 void print_all_tokens(char** tokens){
+    /*I print all tokens*/
     int i = 0;
     for (char **p = tokens; *p; p++){
         printf("Token[%d] = %s\n",i,*p);
