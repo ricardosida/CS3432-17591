@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
-#define MAX_LIMIT 1000
+#define MAX_LIMIT 100
 
 int count_tokens(char* str);
 char** tokenize(char* str);
@@ -14,13 +14,11 @@ void print_all_tokens(char** tokens);
 
 int main()
 {
-    /*Ask fro input*/
-    char str[MAX_LIMIT];
-    fgets(str, MAX_LIMIT, stdin);
-    /*create a pointer for the input*/
+    /*Ask for input*/
+    char* str = (char*) malloc(MAX_LIMIT * sizeof(char));
+    scanf("%99[^\n]", str);
     
-    char* pointer = str;
-    tokenize(pointer);
+    tokenize(str);
 
 }
 
@@ -28,7 +26,7 @@ char** tokenize(char* str) {
     /*First we get the number of tokens*/
     int num_tokens = count_tokens(str);
     /*I create a new pointer of pointers with the number of tokens avaiable as length*/
-    char ** tokens = (char**) malloc((num_tokens) *10 *sizeof(char));
+    char ** tokens = (char**) malloc(num_tokens *10*sizeof(char));
     char *initial_word = word_start(str);
     char *last_word  = end_word(initial_word);
     for (int i = 0; i < num_tokens; i++) {
@@ -87,7 +85,7 @@ terminated string*/
 char *end_word(char* str){
     /*base case, in case pointer is at the end of array*/
     if (*str == '\0'){
-        return str-1;
+        return str;
     }
     char *pointer = str; 
     if (delim_character(*pointer) == true){
@@ -134,7 +132,7 @@ char *copy_str(char *inStr, short len){
 void print_all_tokens(char** tokens){
     int i = 0;
     for (char **p = tokens; *p; p++){
-        printf("tokens[%d] = %s\n",i,*p);
+        printf("Token[%d] = %s\n",i,*p);
         i++;
     }
 
