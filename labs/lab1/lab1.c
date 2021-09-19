@@ -29,15 +29,15 @@ char** tokenize(char* str) {
     int num_tokens = count_tokens(str);
     /*I create a new pointer of pointers with the number of tokens avaiable as length*/
     char ** tokens = (char**) malloc((num_tokens) *10 *sizeof(char));
-    char *initial_word = str;
+    char *initial_word = word_start(str);
+    char *last_word  = end_word(initial_word);
     for (int i = 0; i < num_tokens; i++) {
-        /*First we get the initial and last letter of each word*/
-        char *initial_word = word_start(initial_word);
-        char *last_word  = end_word(initial_word);
         /*Now we subtract the addreses of both pointers*/
         int difference = (last_word - initial_word);
         tokens[i]  = copy_str(initial_word, difference);
-        initial_word += difference;
+        /*we get the initial and last letter of each word*/
+        initial_word = word_start(last_word);
+        last_word  = end_word(initial_word);
     }
 
     //printf("tokens[] = %s\n",tokens);
@@ -85,6 +85,10 @@ char *word_start(char* str){
 /* Returns a pointer to the first space character of the zero
 terminated string*/
 char *end_word(char* str){
+    /*base case, in case pointer is at the end of array*/
+    if (*str == '\0'){
+        return str-1;
+    }
     char *pointer = str; 
     if (delim_character(*pointer) == true){
         char *p = pointer;
@@ -129,7 +133,6 @@ char *copy_str(char *inStr, short len){
 
 void print_all_tokens(char** tokens){
     int i = 0;
-
     for (char **p = tokens; *p; p++){
         printf("tokens[%d] = %s\n",i,*p);
         i++;
