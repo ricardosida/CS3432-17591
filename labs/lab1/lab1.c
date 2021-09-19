@@ -26,7 +26,7 @@ char** tokenize(char* str) {
     /*First we get the number of tokens*/
     int num_tokens = count_tokens(str);
     /*I create a new pointer of pointers with the number of tokens avaiable as length*/
-    char ** tokens = (char**) malloc(num_tokens *10*sizeof(char));
+    char ** tokens = (char**) malloc(num_tokens * sizeof(char*));
     char *initial_word = word_start(str);
     char *last_word  = end_word(initial_word);
     for (int i = 0; i < num_tokens; i++) {
