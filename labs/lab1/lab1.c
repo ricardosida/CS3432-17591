@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
-#define MAX_LIMIT 100
+#define MAX_LIMIT 1000
 
 int count_tokens(char* str);
 char** tokenize(char* str);
@@ -16,7 +16,7 @@ int main()
 {
     /*Ask for input*/
     char* str = (char*) malloc(MAX_LIMIT * sizeof(char));
-    scanf("%99[^\n]", str);
+    scanf("%999[^\n]", str);
     
     /*I send the pointer to tokeenize*/
     tokenize(str);
