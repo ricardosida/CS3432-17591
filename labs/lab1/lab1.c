@@ -18,7 +18,7 @@ int main()
     char* str = (char*) malloc(MAX_LIMIT * sizeof(char));
     scanf("%999[^\n]", str);
     
-    /*I send the pointer to tokeenize*/
+    /*I send the pointer to tokenize*/
     tokenize(str);
 
 }
@@ -27,7 +27,7 @@ char** tokenize(char* str) {
     /*First we get the number of tokens*/
     int num_tokens = count_tokens(str);
     /*I create a new pointer of pointers with the number of tokens avaiable as length*/
-    char ** tokens = (char**) malloc(num_tokens * sizeof(char*));
+    char ** tokens = (char**) malloc((num_tokens+1)*sizeof(char*));
     /*Get the initial word and the initial end of word*/
     char *initial_word = word_start(str);
     char *last_word  = end_word(initial_word);
@@ -126,7 +126,7 @@ int count_tokens(char* str){
      tokens[3] = 0
 */
 char *copy_str(char *inStr, short len){
-    /*Create a new pointer and fill it with all the char of the given word*/
+    /*Create a new pointer and fill it out with all the chars of the given word*/
     char* new_string = (char*) malloc(len * sizeof(char));
     for (int i = 0; i < len; i++) {
         new_string[i] = *inStr;
