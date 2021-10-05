@@ -41,11 +41,6 @@ void init_regs(){
 
 
 
-/**
- * Fill out this function and use it to read interpret user input to execute RV64 instructions.
- * You may expect that a single, properly formatted RISC-V instruction string will be passed
- * as a parameter to this function.
- */
 bool interpret(char* instr){
 	//I send the pointer and get the tokens
 	char** instructions = tokenize(instr);
@@ -223,10 +218,7 @@ void write_read_demo(){
 	printf("Read address %lu (0x%lX): %lu (0x%lX)\n", address, address, read, read); // %lu -> format as an long-unsigned
 }
 
-/**
- * Your code goes in the main
- *
- */
+
 int main(){
 	// Do not write any code between init_regs
 	init_regs(); // DO NOT REMOVE THIS LINE
