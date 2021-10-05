@@ -52,6 +52,9 @@ bool interpret(char* instr){
 	char addi[20] = "ADDI";
 	char lw[20] = "LW";
 	char sw[20] = "SW";
+	char and[20] = "AND";
+	char or[20] = "OR";
+	char xor[20] = "XOR";
 	if (equal(instructions[0], add)){
 		printf("succes");
 		int value = atoi(rem(instructions[1]));
@@ -69,9 +72,10 @@ bool interpret(char* instr){
 		
 		reg[value] = reg[value2] + reg[value3];
 		return true;
+
 	}else if(equal(instructions[0], lw)){
 		char* mem_file = "mem.txt";
-		int32_t address = (atoi(instructions[2]) + reg[atoi(rem2(instructions[3]))])*4;
+		int32_t address = (atoi(instructions[2]) + reg[atoi(rem2(instructions[3]))]);
 		int value = atoi(rem(instructions[1]));
 		int32_t read = read_address(address, mem_file);
 		reg[value] = read;
@@ -79,9 +83,10 @@ bool interpret(char* instr){
 
 		printf("Read address %lu (0x%lX): %lu (0x%lX)\n", address, address, read, read); // %lu -> format as an long-unsigned
 		return true;
+
 	}else if(equal(instructions[0], sw)){
 		int32_t data_to_write = atoi(rem(instructions[1]));
-		int32_t address = (atoi(instructions[2]) + reg[atoi(rem2(instructions[3]))])*4;
+		int32_t address = (atoi(instructions[2]) + reg[atoi(rem2(instructions[3]))]);
 		char* mem_file = "mem.txt";
 
 
@@ -89,6 +94,27 @@ bool interpret(char* instr){
 		if(write == (int32_t) NULL)
 			printf("ERROR: Unsucessful write to address %0X\n", 0x40);
 		return true;
+
+	}else if(equal(instructions[0], and)){
+		int value = atoi(rem(instructions[1]));
+		int value2 = atoi(rem(instructions[2]));
+		int value3 = atoi(rem(instructions[3]));
+		
+		reg[value] = reg[value2] & reg[value3];
+
+	}else if(equal(instructions[0], or)){
+		int value = atoi(rem(instructions[1]));
+		int value2 = atoi(rem(instructions[2]));
+		int value3 = atoi(rem(instructions[3]));
+		
+		reg[value] = reg[value2] | reg[value3];
+
+	}else if(equal(instructions[0], xor)){
+		int value = atoi(rem(instructions[1]));
+		int value2 = atoi(rem(instructions[2]));
+		int value3 = atoi(rem(instructions[3]));
+		
+		reg[value] = reg[value2] ^ reg[value3];
 
 	}
 	return false;
@@ -116,6 +142,7 @@ bool equal(char* x, char* y){
 	
 
 }
+//remove the X from register
 char* rem(char* str){
 	char* newPointer = (char*) malloc(2 * sizeof(char));
 	int i = 0;
@@ -129,6 +156,7 @@ char* rem(char* str){
 
 	return newPointer;
 }
+//removes parenthesis and returns the string of the number
 char* rem2(char* str){
 	char* newPointer = (char*) malloc(2 * sizeof(char));
 	int i = 0;
