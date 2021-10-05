@@ -6,11 +6,25 @@
 #include "tokenizer.h" // Create header file and reference that
 #include "memory.h" // built-in functions to read and write to a specific file
 
+bool equal(char* str, char str2[]);
+char* rem(char* str);
+char* rem2(char* str);
+
 int32_t* reg; // Array of 32 32-bit registers
 
 void init_regs();
 bool interpret(char* instr);
 void write_read_demo();
+
+void print_regs(){
+	int col_size = 10;
+	for(int i = 0; i < 8; i++){
+		printf("X%02i:%.*lld", i, col_size, (long long int) reg[i]);
+		printf(" X%02i:%.*lld", i+8, col_size, (long long int) reg[i+8]);
+		printf(" X%02i:%.*lld", i+16, col_size, (long long int) reg[i+16]);
+		printf(" X%02i:%.*lld\n", i+24, col_size, (long long int) reg[i+24]);
+	}
+}
 
 /**
  * Initialize register array for usage.
@@ -32,15 +46,104 @@ void init_regs(){
  * as a parameter to this function.
  */
 bool interpret(char* instr){
+
 	char** instructions = tokenize(instr);
-	if (instructions[0] == "ADD"){
-		instructions[1] "X05"
-		int value = atoi(instructions[1])
+	char add[20] = "ADD";
+	char addi[20] = "ADDI";
+	char lw[20] = "LW";
+	char sw[20] = "SW";
+	if (equal(instructions[0], add)){
+		printf("succes");
+		int value = atoi(rem(instructions[1]));
+		int value2 = atoi(rem(instructions[2]));
+		int value3 = atoi(rem(instructions[3]));
 		
+		reg[value] = reg[value2] + reg[value3];
+		printf("%d %d %d",reg[value2],reg[value3],reg[value]);
+		return true;
+
+	}else if (equal(instructions[0], addi)){
+		int value = atoi(rem(instructions[1]));
+		int value2 = atoi(rem(instructions[2]));
+		int value3 = atoi(instructions[3]);
+		
+		reg[value] = reg[value2] + reg[value3];
+		return true;
+	}else if(equal(instructions[0], lw)){
+		char* mem_file = "mem.txt";
+		int32_t address = (atoi(instructions[2]) + reg[atoi(rem2(instructions[3]))])*4;
+		int value = atoi(rem(instructions[1]));
+		int32_t read = read_address(address, mem_file);
+		reg[value] = read;
+		//printf("ADRESS %d", reg[value]);
+
+		printf("Read address %lu (0x%lX): %lu (0x%lX)\n", address, address, read, read); // %lu -> format as an long-unsigned
+		return true;
+	}else if(equal(instructions[0], sw)){
+		int32_t data_to_write = atoi(rem(instructions[1]));
+		int32_t address = (atoi(instructions[2]) + reg[atoi(rem2(instructions[3]))])*4;
+		char* mem_file = "mem.txt";
+
+
+		int32_t write = write_address(data_to_write, address, mem_file);
+		if(write == (int32_t) NULL)
+			printf("ERROR: Unsucessful write to address %0X\n", 0x40);
+		return true;
 
 	}
+	return false;
 
-	return true;
+}
+bool equal(char* x, char* y){
+
+    // Iterate a loop till the end
+    // of both the strings
+	int counter = 0;
+	
+    while (*x != '\0') {
+		counter++;
+        if (*x == *y) {
+            x++;
+            y++;
+        }else{
+			return false;
+		}
+    }
+	if (counter == 0){
+		return false;
+	}
+    return true;
+	
+
+}
+char* rem(char* str){
+	char* newPointer = (char*) malloc(2 * sizeof(char));
+	int i = 0;
+	for (char *p = str; *p; p++){
+		if (i != 0){
+			newPointer[i-1] = *p;
+		}
+		
+        i++;
+    }
+
+	return newPointer;
+}
+char* rem2(char* str){
+	char* newPointer = (char*) malloc(2 * sizeof(char));
+	int i = 0;
+	for (char *p = str; *p; p++){
+		if (*p == ')'){
+			break;
+		}
+		if (i > 1){
+			newPointer[i-2] = *p;
+		}
+		
+        i++;
+    }
+
+	return newPointer;
 }
 
 
@@ -71,12 +174,24 @@ void write_read_demo(){
 int main(){
 	// Do not write any code between init_regs
 	init_regs(); // DO NOT REMOVE THIS LINE
+	print_regs();
 
-	char* new_string = (char*) malloc(MAX_LIMIT * sizeof(char));
-	scanf("%999[^\n]", new_string);
-	interpret(new_string);
+	printf(" RV32 Interpreter.\nType RV32 instructions. Use upper-case letters and space as a delimiter.\nEnter 'EOF' character to end program\n");
 
-	// Below is a sample program to a write-read. Overwrite this with your own code.
+	char* instruction = malloc(1000 * sizeof(char));
+	bool is_null = false;
+	// fgets() returns null if EOF is reached.
+	is_null = fgets(instruction, 1000, stdin) == NULL;
+	while(!is_null){
+		interpret(instruction);
+		printf("\n");
+		print_regs();
+		printf("\n");
+
+		is_null = fgets(instruction, 1000, stdin) == NULL;
+	}
+
+	printf("Good bye!\n");
 
 	return 0;
 }
