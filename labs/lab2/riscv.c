@@ -6,6 +6,7 @@
 #include "tokenizer.h" // Create header file and reference that
 #include "memory.h" // built-in functions to read and write to a specific file
 
+//declaration of methods
 bool equal(char* str, char str2[]);
 char* rem(char* str);
 char* rem2(char* str);
@@ -46,8 +47,9 @@ void init_regs(){
  * as a parameter to this function.
  */
 bool interpret(char* instr){
-
+	//I send the pointer and get the tokens
 	char** instructions = tokenize(instr);
+	//I create different arrays with the strings I will be comparing later on
 	char add[20] = "ADD";
 	char addi[20] = "ADDI";
 	char lw[20] = "LW";
@@ -55,37 +57,51 @@ bool interpret(char* instr){
 	char and[20] = "AND";
 	char or[20] = "OR";
 	char xor[20] = "XOR";
+
+	//add
 	if (equal(instructions[0], add)){
-		printf("succes");
-		int value = atoi(rem(instructions[1]));
+		//get the integer value of each register
+		//first we call remove method to get rid of the X, then we transform the string to an int
+		//atoi method transforms a string to int
+		int value = atoi(rem(instructions[1])); //destination
 		int value2 = atoi(rem(instructions[2]));
 		int value3 = atoi(rem(instructions[3]));
 		
+		//at the end we just do the operation
 		reg[value] = reg[value2] + reg[value3];
-		printf("%d %d %d",reg[value2],reg[value3],reg[value]);
+	
 		return true;
 
 	}else if (equal(instructions[0], addi)){
-		int value = atoi(rem(instructions[1]));
+		//addi
+		int value = atoi(rem(instructions[1])); //destination
 		int value2 = atoi(rem(instructions[2]));
+		//since we have a value, we dont remove anything
 		int value3 = atoi(instructions[3]);
 		
 		reg[value] = reg[value2] + reg[value3];
 		return true;
 
 	}else if(equal(instructions[0], lw)){
+		//lw
 		char* mem_file = "mem.txt";
+		//address is equal to the offset + the value inside the register
 		int32_t address = (atoi(instructions[2]) + reg[atoi(rem2(instructions[3]))]);
+		
+		//value is the destination
 		int value = atoi(rem(instructions[1]));
 		int32_t read = read_address(address, mem_file);
 		reg[value] = read;
-		//printf("ADRESS %d", reg[value]);
+	
 
 		printf("Read address %lu (0x%lX): %lu (0x%lX)\n", address, address, read, read); // %lu -> format as an long-unsigned
 		return true;
 
 	}else if(equal(instructions[0], sw)){
-		int32_t data_to_write = atoi(rem(instructions[1]));
+		//sw
+		//we get the value inisde register
+		int32_t data_to_write = reg[atoi(rem(instructions[1]))];
+		//address is equal to the offset + the value inside the register
 		int32_t address = (atoi(instructions[2]) + reg[atoi(rem2(instructions[3]))]);
 		char* mem_file = "mem.txt";
 
@@ -96,25 +112,33 @@ bool interpret(char* instr){
 		return true;
 
 	}else if(equal(instructions[0], and)){
-		int value = atoi(rem(instructions[1]));
-		int value2 = atoi(rem(instructions[2]));
+		//and
+		//first we call remove method to get rid of the X, then we transform the string to an int
+		int value = atoi(rem(instructions[1])); //destination
+		int value2 = atoi(rem(instructions[2])); 
 		int value3 = atoi(rem(instructions[3]));
 		
+		//we just perform the operation
 		reg[value] = reg[value2] & reg[value3];
+		return true;
 
 	}else if(equal(instructions[0], or)){
-		int value = atoi(rem(instructions[1]));
+		//or
+		int value = atoi(rem(instructions[1])); //destination
 		int value2 = atoi(rem(instructions[2]));
 		int value3 = atoi(rem(instructions[3]));
 		
 		reg[value] = reg[value2] | reg[value3];
+		return true;
 
 	}else if(equal(instructions[0], xor)){
-		int value = atoi(rem(instructions[1]));
+		//xor
+		int value = atoi(rem(instructions[1])); //destination
 		int value2 = atoi(rem(instructions[2]));
 		int value3 = atoi(rem(instructions[3]));
 		
 		reg[value] = reg[value2] ^ reg[value3];
+		return true;
 
 	}
 	return false;
@@ -122,8 +146,7 @@ bool interpret(char* instr){
 }
 bool equal(char* x, char* y){
 
-    // Iterate a loop till the end
-    // of both the strings
+    // Iterate a loop till the end of both the strings
 	int counter = 0;
 	
     while (*x != '\0') {
@@ -132,12 +155,15 @@ bool equal(char* x, char* y){
             x++;
             y++;
         }else{
+			//if it's not the same, return false
 			return false;
 		}
     }
 	if (counter == 0){
+		//if the given input is in blank, that means it's not the same
 		return false;
 	}
+	//if we're here it's because both pointers hold the same information
     return true;
 	
 
@@ -148,6 +174,7 @@ char* rem(char* str){
 	int i = 0;
 	for (char *p = str; *p; p++){
 		if (i != 0){
+			//just ignore the first char
 			newPointer[i-1] = *p;
 		}
 		
@@ -162,12 +189,13 @@ char* rem2(char* str){
 	int i = 0;
 	for (char *p = str; *p; p++){
 		if (*p == ')'){
+			//at the end of the string we will not add the ')' to the pointer
 			break;
 		}
 		if (i > 1){
+			//ignore the first and second char '(' and 'X'
 			newPointer[i-2] = *p;
-		}
-		
+		}	
         i++;
     }
 
